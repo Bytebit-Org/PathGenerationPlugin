@@ -1,0 +1,18 @@
+{
+  "name": "PathGenerationPlugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rbxts/cue": "^1.0.0",
+    "@rbxts/roact": "^1.0.7",
+    "@rbxts/services": "^1.0.23",
+    "@rbxts/types": "^1.0.217"
+  }
+}

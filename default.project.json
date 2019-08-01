@@ -1,0 +1,9 @@
+{
+	"name": "PathGenerationPlugin",
+	"tree": {
+        "$path": "out",
+        "include": {
+            "$path": "include"
+        }
+	}
+}
