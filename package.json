@@ -10,9 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@rbxts/PathGenUtils": "git+https://github.com/Bytebit-Org/PathGenUtils.git",
     "@rbxts/cue": "^1.0.0",
     "@rbxts/roact": "^1.0.7",
     "@rbxts/services": "^1.0.23",
-    "@rbxts/types": "^1.0.217"
+    "@rbxts/types": "^1.0.235"
   }
 }

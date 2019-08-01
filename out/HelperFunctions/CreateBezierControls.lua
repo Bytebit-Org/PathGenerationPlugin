@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
 local Workspace = TS.import(TS.getModule("services")).Workspace;
 local _ENTERING_SELECTION_SPHERE_COLOR3 = Color3.fromRGB(0, 128, 0);
@@ -34,12 +34,12 @@ local function _createHandleVisualization(selectionSphereColor3)
 	part.Parent = _BEZIER_HANDLE_VISUALIZATIONS_FOLDER;
 	return part;
 end;
-_exports = function(waypoint)
+exports = function(waypoint)
 	local exitingHandleVisualization = _createHandleVisualization(_EXITING_SELECTION_SPHERE_COLOR3);
-	exitingHandleVisualization.Position = (waypoint.VisualizationPart.Position + (waypoint.VisualizationPart.CFrame.LookVector * 2));
+	exitingHandleVisualization.Position = (waypoint.VisualizationPart.Position + ((waypoint.VisualizationPart.CFrame.LookVector * (2))));
 	waypoint.ExitingHandleVisualizationPart = exitingHandleVisualization;
 	local enteringHandleVisualization = _createHandleVisualization(_ENTERING_SELECTION_SPHERE_COLOR3);
-	enteringHandleVisualization.Position = (waypoint.VisualizationPart.Position + (waypoint.VisualizationPart.CFrame.LookVector * -2));
+	enteringHandleVisualization.Position = (waypoint.VisualizationPart.Position + ((waypoint.VisualizationPart.CFrame.LookVector * (-2))));
 	waypoint.EnteringHandleVisualizationPart = enteringHandleVisualization;
 end;
-return _exports;
+return exports;

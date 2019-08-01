@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:52 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local Workspace = TS.import(TS.getModule("services")).Workspace;
 local PluginSharedConstants = TS.import(script.Parent.Parent, "PluginSharedConstants");
 local _SELECTION_BOX_COLOR3 = Color3.fromRGB(0, 202, 255);
@@ -16,7 +16,7 @@ local _VISUALIZATIONS_FOLDER = Instance.new("Folder");
 _VISUALIZATIONS_FOLDER.Archivable = false;
 _VISUALIZATIONS_FOLDER.Name = PluginSharedConstants.VisualizationsFolderName;
 _VISUALIZATIONS_FOLDER.Parent = Workspace;
-_exports = function()
+exports = function()
 	local part = Instance.new("Part");
 	part.Anchored = true;
 	part.Archivable = false;
@@ -54,4 +54,4 @@ _exports = function()
 	part.Parent = _VISUALIZATIONS_FOLDER;
 	return part;
 end;
-return _exports;
+return exports;

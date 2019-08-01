@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:50 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local _0 = TS.import(TS.getModule("services"));
 local Selection, HttpService = _0.Selection, _0.HttpService;
 local EditablePathGenWaypoint = TS.import(script.Parent.Parent, "PathGen", "EditablePathGenWaypoint");
@@ -10,7 +10,7 @@ local CreateWaypointVisualizer = TS.import(script.Parent, "CreateWaypointVisuali
 local ConnectWaypointAndVisualizer = TS.import(script.Parent, "ConnectWaypointAndVisualizer");
 local CreateBezierControls = TS.import(script.Parent, "CreateBezierControls");
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
-_exports = function()
+exports = function()
 	assert(#Selection:Get() > 0, "Nothing selected, cannot load");
 	local firstSelection = Selection:Get()[1];
 	assert(firstSelection:IsA("ModuleScript"), "ModuleScript must be selected first, cannot load");
@@ -53,4 +53,4 @@ _exports = function()
 		error("Malformed ModuleScript, cannot load");
 	end;
 end;
-return _exports;
+return exports;

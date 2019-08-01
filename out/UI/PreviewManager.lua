@@ -1,13 +1,15 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
 local Workspace = TS.import(TS.getModule("services")).Workspace;
 local _0;
 do
-	local PreviewManager = {};
+	local PreviewManager = setmetatable({}, {
+		__tostring = function() return "PreviewManager" end;
+	});
 	PreviewManager.__index = PreviewManager;
 	function PreviewManager.new(...)
 		local self = setmetatable({}, PreviewManager);
@@ -15,7 +17,6 @@ do
 		return self;
 	end;
 	function PreviewManager:constructor()
-		self._beamsFolder = nil;
 		self:_setUpBeamsFolder();
 		self:_connectHandlers();
 	end;
@@ -34,15 +35,15 @@ do
 					local exitingAttachment = exitingWaypoint.VisualizationPart:FindFirstChild("ExitingAttachment");
 					local exitingCurveSize = 0;
 					if exitingWaypoint.ExitingHandleVisualizationPart ~= nil then
-						local relativeCurvePointDisplacement = (exitingWaypoint.ExitingHandleVisualizationPart.Position - exitingWaypoint.VisualizationPart.Position);
+						local relativeCurvePointDisplacement = (exitingWaypoint.ExitingHandleVisualizationPart.Position - (exitingWaypoint.VisualizationPart.Position));
 						exitingAttachment.CFrame = self:_createDesiredCFrame(relativeCurvePointDisplacement);
 						exitingCurveSize = relativeCurvePointDisplacement.Magnitude;
 					end;
 					local enteringAttachment = enteringWaypoint.VisualizationPart:FindFirstChild("EnteringAttachment");
 					local enteringCurveSize = 0;
 					if enteringWaypoint.EnteringHandleVisualizationPart ~= nil then
-						local relativeCurvePointDisplacement = (enteringWaypoint.EnteringHandleVisualizationPart.Position - enteringWaypoint.VisualizationPart.Position);
-						enteringAttachment.CFrame = self:_createDesiredCFrame((relativeCurvePointDisplacement * -1));
+						local relativeCurvePointDisplacement = (enteringWaypoint.EnteringHandleVisualizationPart.Position - (enteringWaypoint.VisualizationPart.Position));
+						enteringAttachment.CFrame = self:_createDesiredCFrame((relativeCurvePointDisplacement * (-1)));
 						enteringCurveSize = relativeCurvePointDisplacement.Magnitude;
 					end;
 					local beam = Instance.new("Beam");
@@ -70,7 +71,7 @@ do
 			return CFrame.new();
 		end;
 		local rightUnit = relativePointOnRightAxis.Unit;
-		local slightlyOffsetUnit = (rightUnit + Vector3.new(1, 0, 0)).Unit;
+		local slightlyOffsetUnit = (rightUnit + (Vector3.new(1, 0, 0))).Unit;
 		local upUnit = rightUnit:Cross(slightlyOffsetUnit).Unit;
 		return CFrame.fromMatrix(Vector3.new(0, 0, 0), rightUnit, upUnit);
 	end;
@@ -83,5 +84,5 @@ do
 	end;
 	_0 = PreviewManager;
 end;
-_exports = _0;
-return _exports;
+exports = _0;
+return exports;

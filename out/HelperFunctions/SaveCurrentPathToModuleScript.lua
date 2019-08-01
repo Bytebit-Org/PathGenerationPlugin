@@ -1,13 +1,13 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:37 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local SavedPathGenWaypoint = TS.import(script.Parent.Parent, "PathGen", "SavedPathGenWaypoint");
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
 local _0 = TS.import(TS.getModule("services"));
 local HttpService, Selection, ServerStorage = _0.HttpService, _0.Selection, _0.ServerStorage;
-_exports = function()
+exports = function()
 	assert(PluginSharedState.PathInfo ~= nil, "No path to save");
 	local saveablePath = {
 		Name = PluginSharedState.PathInfo.Name;
@@ -45,4 +45,4 @@ _exports = function()
 		moduleScript.Parent = ServerStorage;
 	end;
 end;
-return _exports;
+return exports;

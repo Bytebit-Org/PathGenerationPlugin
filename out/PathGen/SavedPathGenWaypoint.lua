@@ -1,10 +1,12 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
-local _exports;
+local exports;
 local _0;
 do
-	local SavedPathGenWaypoint = {};
+	local SavedPathGenWaypoint = setmetatable({}, {
+		__tostring = function() return "SavedPathGenWaypoint" end;
+	});
 	SavedPathGenWaypoint.__index = SavedPathGenWaypoint;
 	function SavedPathGenWaypoint.new(...)
 		local self = setmetatable({}, SavedPathGenWaypoint);
@@ -15,9 +17,8 @@ do
 		self.ExitingHandleWorldPosition = nil;
 		self.EnteringHandleWorldPosition = nil;
 		self.Name = "";
-		self.WorldPosition = nil;
 	end;
 	_0 = SavedPathGenWaypoint;
 end;
-_exports = _0;
-return _exports;
+exports = _0;
+return exports;

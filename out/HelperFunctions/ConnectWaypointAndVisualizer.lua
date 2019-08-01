@@ -1,11 +1,11 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:42 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
 local DeleteWaypoint = TS.import(script.Parent, "DeleteWaypoint");
-_exports = function(waypoint, visualizationPart)
+exports = function(waypoint, visualizationPart)
 	waypoint.VisualizationPart = visualizationPart;
 	visualizationPart.AncestryChanged:Connect(function(childInstance, parentInstance)
 		if parentInstance == nil then
@@ -16,4 +16,4 @@ _exports = function(waypoint, visualizationPart)
 		PluginSharedState.Updated:go();
 	end);
 end;
-return _exports;
+return exports;

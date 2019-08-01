@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:40 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local HttpService = TS.import(TS.getModule("services")).HttpService;
 local sharedConstants = {
 	ActionConfigurations = {
@@ -30,5 +30,5 @@ local sharedConstants = {
 	};
 	VisualizationsFolderName = "EditablePathGenWaypointVisualizations";
 };
-_exports = sharedConstants;
-return _exports;
+exports = sharedConstants;
+return exports;

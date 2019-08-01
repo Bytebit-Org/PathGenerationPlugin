@@ -1,7 +1,7 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
-local _exports = {};
+local exports = {};
 local function DeriveColorModifier(props, state)
 	if not props.Active then
 		return Enum.StudioStyleGuideModifier.Disabled;
@@ -17,5 +17,5 @@ local function DeriveColorModifier(props, state)
 	end;
 	return Enum.StudioStyleGuideModifier.Default;
 end;
-_exports.DeriveColorModifier = DeriveColorModifier;
-return _exports;
+exports.DeriveColorModifier = DeriveColorModifier;
+return exports;

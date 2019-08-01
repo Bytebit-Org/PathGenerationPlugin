@@ -1,11 +1,11 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
 local PlaceNewWaypointAsync = TS.import(script.Parent, "PlaceNewWaypointAsync");
-_exports = function(shouldInsertBeforeCurrentWaypointIndex)
+exports = function(shouldInsertBeforeCurrentWaypointIndex)
 	if PluginSharedState.PathInfo == nil then
 		warn("Path Generator: No path initialized yet");
 		return nil;
@@ -28,4 +28,4 @@ _exports = function(shouldInsertBeforeCurrentWaypointIndex)
 	table.insert(PluginSharedState.PathInfo.Waypoints, insertIndex + 1, newWaypoint);
 	PluginSharedState.Updated:go();
 end;
-return _exports;
+return exports;

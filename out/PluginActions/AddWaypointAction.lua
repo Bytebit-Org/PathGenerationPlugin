@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:47 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.include.RuntimeLib);
-local _exports = {};
+local exports = {};
 local PluginSharedState = TS.import(script.Parent.Parent, "PluginSharedState");
 local PluginSharedConstants = TS.import(script.Parent.Parent, "PluginSharedConstants");
 local InsertWaypoint = TS.import(script.Parent.Parent, "HelperFunctions", "InsertWaypoint");
@@ -25,5 +25,5 @@ local function RegisterMenus()
 	local _0 = PluginSharedState.PluginMenus;
 	_0[PluginSharedConstants.MenuNames.InsertWaypointMenuName] = pluginMenu;
 end;
-_exports.RegisterActions, _exports.RegisterMenus = RegisterActions, RegisterMenus;
-return _exports;
+exports.RegisterActions, exports.RegisterMenus = RegisterActions, RegisterMenus;
+return exports;

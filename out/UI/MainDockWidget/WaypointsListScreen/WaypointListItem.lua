@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local Roact = TS.import(TS.getModule("roact").roact.src);
 local StudioTextButton = TS.import(script.Parent.Parent.Parent, "RoactStudioComponents", "StudioTextButton");
 local StudioTextBox = TS.import(script.Parent.Parent.Parent, "RoactStudioComponents", "StudioTextBox");
@@ -24,7 +24,6 @@ local _NUMBER_OF_PROPERTY_LINES = 1;
 local _0;
 do
 	local WaypointListItem = Roact.Component:extend("WaypointListItem");
-	WaypointListItem.UnexpandedHeightOffset = 30;
 	function WaypointListItem:init(props)
 	end;
 	function WaypointListItem:_GetHeight()
@@ -159,7 +158,7 @@ do
 						Events = {
 							MouseButton1Click = function()
 								local currentCameraCFrame = Workspace.CurrentCamera.CFrame;
-								local newCameraPosition = (self.props.Waypoint.VisualizationPart.Position + (currentCameraCFrame.LookVector * 10));
+								local newCameraPosition = (self.props.Waypoint.VisualizationPart.Position + ((currentCameraCFrame.LookVector * (10))));
 								Workspace.CurrentCamera.CFrame = CFrame.new(newCameraPosition, self.props.Waypoint.VisualizationPart.Position);
 							end;
 						} 
@@ -199,7 +198,8 @@ do
 			})
 		});
 	end;
+	WaypointListItem.UnexpandedHeightOffset = 30;
 	_0 = WaypointListItem;
 end;
-_exports = _0;
-return _exports;
+exports = _0;
+return exports;

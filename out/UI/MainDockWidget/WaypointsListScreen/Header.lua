@@ -1,8 +1,8 @@
--- Compiled with https://roblox-ts.github.io v0.1.16
--- July 10, 2019, 9:26 PM GMT-08:00
+-- Compiled with https://roblox-ts.github.io v0.2.14
+-- July 31, 2019, 10:14 PM GMT-08:00
 
 local TS = require(script.Parent.Parent.Parent.Parent.include.RuntimeLib);
-local _exports;
+local exports;
 local Roact = TS.import(TS.getModule("roact").roact.src);
 local StudioTextButton = TS.import(script.Parent.Parent.Parent, "RoactStudioComponents", "StudioTextButton");
 local SaveCurrentPathToModuleScript = TS.import(script.Parent.Parent.Parent.Parent, "HelperFunctions", "SaveCurrentPathToModuleScript");
@@ -10,8 +10,6 @@ local BakeCurrentPathToModuleScriptRelativeToSelectedModel = TS.import(script.Pa
 local _0;
 do
 	local Header = Roact.Component:extend("Header");
-	Header.Position = UDim2.new(0, 1, 0, 1);
-	Header.Size = UDim2.new(1, -2, 0, 30);
 	function Header:render()
 		local theme = settings().Studio.Theme;
 		local buttonSize = StudioTextButton.HeightUDim.Offset;
@@ -68,7 +66,9 @@ do
 			})
 		});
 	end;
+	Header.Position = UDim2.new(0, 1, 0, 1);
+	Header.Size = UDim2.new(1, -2, 0, 30);
 	_0 = Header;
 end;
-_exports = _0;
-return _exports;
+exports = _0;
+return exports;

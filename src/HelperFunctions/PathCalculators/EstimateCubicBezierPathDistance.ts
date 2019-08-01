@@ -1,4 +1,4 @@
-import { ComputeCubicBezierPoint } from "../BezierCurves";
+import { ComputeCubicBezierPoint } from "@rbxts/PathGenUtils/out/BezierCurves";
 
 const _STEP_SIZE = 0.0001;
 
