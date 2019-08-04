@@ -1,5 +1,7 @@
 /// <reference types="@rbxts/types" />
-declare const _default: (value: unknown) => value is {
+/// <reference types="@rbxts/t" />
+import t from "@rbxts/t";
+declare const IPathData: (value: unknown) => value is {
     Name: string;
     TotalDistance: number;
     Waypoints: {
@@ -9,4 +11,5 @@ declare const _default: (value: unknown) => value is {
         EnteringHandleRelativePosition: Vector3 | undefined;
     }[];
 };
-export = _default;
+declare type IPathData = t.static<typeof IPathData>;
+export = IPathData;

@@ -1,9 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- July 31, 2019, 10:14 PM GMT-08:00
+-- August 3, 2019, 7:48 PM Pacific Daylight Time
 
 local TS = require(script.Parent.Parent.Parent.include.RuntimeLib);
 local exports;
-local ComputeQuadraticBezierPoint = TS.import(TS.getModule("PathGenUtils").index).ComputeQuadraticBezierPoint;
+local ComputeQuadraticBezierPoint = TS.import(TS.getModule("PathGenUtils").out.PathGenUtils).ComputeQuadraticBezierPoint;
 local _STEP_SIZE = 0.0001;
 exports = function(startPosition, curveHandlePosition, endPosition)
 	local bezierPoints = { startPosition, curveHandlePosition, endPosition };
