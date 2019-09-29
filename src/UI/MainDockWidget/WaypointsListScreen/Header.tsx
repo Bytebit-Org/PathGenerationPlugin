@@ -48,7 +48,9 @@ export = class Header extends Roact.Component<IHeaderProperties> {
                 Width={new UDim(0, 40)}
                 
                 Events={{
-                    MouseButton1Click: BakeCurrentPathToModuleScriptRelativeToSelectedModel
+                    MouseButton1Click: () => BakeCurrentPathToModuleScriptRelativeToSelectedModel({
+						BezierApproximationLinearSegmentCount: 0,
+					})
                 }} />
             <StudioTextButton
                 Key={"SaveButton"}
