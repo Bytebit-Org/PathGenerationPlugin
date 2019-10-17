@@ -1,4 +1,3 @@
-import { Workspace } from "@rbxts/services";
 import PluginSharedConstants = require("PluginSharedConstants");
 
 const _SELECTION_BOX_COLOR3 = Color3.fromRGB(0, 202, 255);
@@ -12,8 +11,8 @@ const _SELECTION_SPHERE_SURFACE_TRANSPARENCY = 0.8;
 
 const _VISUALIZATIONS_FOLDER = new Instance("Folder");
 _VISUALIZATIONS_FOLDER.Archivable = false;
-_VISUALIZATIONS_FOLDER.Name = PluginSharedConstants.VisualizationsFolderName;
-_VISUALIZATIONS_FOLDER.Parent = Workspace;
+_VISUALIZATIONS_FOLDER.Name = PluginSharedConstants.FolderNames.WaypointVisualizations;
+_VISUALIZATIONS_FOLDER.Parent = PluginSharedConstants.BaseFolder;
 
 export = function () : BasePart {
     const part = new Instance("Part");

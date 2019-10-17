@@ -1,5 +1,9 @@
 import { HttpService } from "@rbxts/services";
 
+const baseFolder = new Instance("Folder");
+baseFolder.Archivable = false;
+baseFolder.Name = "PathGenPluginVisualizations";
+
 const sharedConstants = {
     ActionConfigurations: {
         InsertWaypointAfter: {
@@ -20,11 +24,16 @@ const sharedConstants = {
         },
         IconSpritesheetAsset: "rbxassetid://3450467031",
         StudioArrowsSpritesheetAsset: "rbxasset://textures/StudioSharedUI/arrowSpritesheet.png",
-    },
+	},
+	BaseFolder: baseFolder,
+	FolderNames: {
+		Beams: "Beams",
+		BezierHandles: "BezierHandleVisualizations",
+		WaypointVisualizations: "WaypointVisualizations",
+	},
     MenuNames: {
         InsertWaypointMenuName: HttpService.GenerateGUID(),
     },
-    VisualizationsFolderName: "EditablePathGenWaypointVisualizations",
 };
 
 export = sharedConstants;

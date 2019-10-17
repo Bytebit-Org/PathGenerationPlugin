@@ -13,7 +13,7 @@ export = function () {
     const mouse = PluginSharedState.Plugin.GetMouse();
 
     const previousTargetFilter = mouse.TargetFilter;
-    mouse.TargetFilter = Workspace.WaitForChild(PluginSharedConstants.VisualizationsFolderName) as Folder;
+    mouse.TargetFilter = PluginSharedConstants.BaseFolder.WaitForChild(PluginSharedConstants.FolderNames.WaypointVisualizations) as Folder;
 
     const visualizationPart = CreateWaypointVisualizer();
     visualizationPart.Position = mouse.Hit.Position;

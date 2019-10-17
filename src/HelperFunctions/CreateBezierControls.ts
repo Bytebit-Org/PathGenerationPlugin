@@ -1,4 +1,5 @@
 import EditablePathGenWaypoint = require("PathGen/EditablePathGenWaypoint");
+import PluginSharedConstants = require("PluginSharedConstants");
 import PluginSharedState = require("PluginSharedState");
 import { Workspace } from "@rbxts/services";
 
@@ -10,8 +11,8 @@ const _SELECTION_SPHERE_SURFACE_TRANSPARENCY = 0.8;
 
 const _BEZIER_HANDLE_VISUALIZATIONS_FOLDER = new Instance("Folder");
 _BEZIER_HANDLE_VISUALIZATIONS_FOLDER.Archivable = false;
-_BEZIER_HANDLE_VISUALIZATIONS_FOLDER.Name = "EditablePathGenWaypointBezierHandleVisualizations";
-_BEZIER_HANDLE_VISUALIZATIONS_FOLDER.Parent = Workspace;
+_BEZIER_HANDLE_VISUALIZATIONS_FOLDER.Name = PluginSharedConstants.FolderNames.BezierHandles;
+_BEZIER_HANDLE_VISUALIZATIONS_FOLDER.Parent = PluginSharedConstants.BaseFolder;
 
 function _createHandleVisualization(selectionSphereColor3: Color3): BasePart {
     const part = new Instance("Part");

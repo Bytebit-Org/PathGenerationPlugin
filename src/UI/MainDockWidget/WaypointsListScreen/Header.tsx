@@ -49,7 +49,10 @@ export = class Header extends Roact.Component<IHeaderProperties> {
                 
                 Events={{
                     MouseButton1Click: () => BakeCurrentPathToModuleScriptRelativeToSelectedModel({
-						BezierApproximationLinearSegmentCount: 0,
+						BezierApproximation: {
+							IsEnabled: true,
+							MinDistanceBetweenCurvePoints: 1.5,
+						}
 					})
                 }} />
             <StudioTextButton

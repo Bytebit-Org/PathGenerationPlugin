@@ -1,4 +1,4 @@
-import { ComputeQuadraticBezierPoint } from "@rbxts/PathGenUtils/out/BezierCurves";
+import { ComputeQuadraticBezierPoint } from "@rbxts/roblox-BezierFunctions";
 
 const _STEP_SIZE = 0.0001;
 
@@ -19,12 +19,14 @@ export = function (startPosition: Vector3, curveHandlePosition: Vector3, endPosi
     let previousPosition = startPosition;
     let totalDistance = 0;
     let currentStep = 0;
-    while (currentStep <= 1) {
+    while (currentStep <= 1 - _STEP_SIZE) {
         currentStep += _STEP_SIZE;
 
         const currentPosition = ComputeQuadraticBezierPoint(bezierPoints, currentStep);
         const stepDisplacement = currentPosition.sub(previousPosition);
-        totalDistance += stepDisplacement.Magnitude;
+		totalDistance += stepDisplacement.Magnitude;
+		
+		previousPosition = currentPosition;
     }
 
     return totalDistance;

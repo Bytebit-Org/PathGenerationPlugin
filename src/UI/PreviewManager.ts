@@ -1,5 +1,5 @@
+import PluginSharedConstants = require("PluginSharedConstants");
 import PluginSharedState = require("PluginSharedState");
-import { Workspace } from "@rbxts/services";
 
 export = class PreviewManager {
     private _beamsFolder: Folder;
@@ -72,8 +72,8 @@ export = class PreviewManager {
     private _setUpBeamsFolder() {
         const beamsFolder = new Instance("Folder");
         beamsFolder.Archivable = false;
-        beamsFolder.Name = "PathGenPreviewBeams";
-        beamsFolder.Parent = Workspace;
+        beamsFolder.Name = PluginSharedConstants.FolderNames.Beams;
+        beamsFolder.Parent = PluginSharedConstants.BaseFolder;
 
         this._beamsFolder = beamsFolder;
     }

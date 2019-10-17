@@ -3,18 +3,83 @@ import { Selection } from "@rbxts/services";
 import EstimateCubicBezierPathDistance = require("./PathCalculators/EstimateCubicBezierPathDistance");
 import CalculateLinearPathDistance = require("./PathCalculators/CalculateLinearPathDistance");
 import EstimateQuadraticBezierPathDistance = require("./PathCalculators/EstimateQuadraticBezierPathDistance");
-import { ComputeCubicBezierPoint, ComputeCubicBezierDerivativeWithRespectToTimestamp, ComputeQuadraticBezierPoint } from "@rbxts/PathGenUtils/out/BezierCurves";
+import { ComputeCubicBezierPoint, ComputeQuadraticBezierPoint } from "@rbxts/roblox-BezierFunctions";
 import EditablePathGenWaypoint = require("PathGen/EditablePathGenWaypoint");
 import StringBuilder = require("Implementation/StringBuilder");
 import IStringBuilder = require("Interfaces/IStringBuilder");
 
 interface IBakeOptions {
-	BezierApproximationLinearSegmentCount: number
+	BezierApproximation: {
+		IsEnabled: boolean;
+		MinDistanceBetweenCurvePoints: number;
+	};
 };
+
+interface IArcPoint {
+	ArcLength: number;
+	Point: Vector3;
+}
+
+function _getArcPoints(startRelativePosition: Vector3, pointsCount: number, timestampToPointGetter: (t: number) => Vector3) : Array<IArcPoint> {
+	const arcPoints = new Array<IArcPoint>();
+
+	let previousPoint = startRelativePosition;
+	let totalArcLength = 0;
+	for (let i = 0; i < pointsCount; i++) {
+		const point = timestampToPointGetter(i / (pointsCount));
+		const cumulativeArcLength = totalArcLength + point.sub(previousPoint).Magnitude;
+
+		arcPoints.push({
+			ArcLength: cumulativeArcLength,
+			Point: point
+		});
+		
+		previousPoint = point;
+		totalArcLength = cumulativeArcLength;
+	}
+
+	return arcPoints
+}
+
+function _getApproximateCurveWaypointPositionFromDistanceAndArcPoints(distanceAlongSegment: number, arcPoints: Array<IArcPoint>) : Vector3 {
+	let low = 0
+	let high = arcPoints.size();
+	let currentIndex = 0;
+
+	while (low < high) {
+		currentIndex = low + math.floor((high - low) / 2);
+		if (arcPoints[currentIndex].ArcLength < distanceAlongSegment) {
+			low = currentIndex + 1;
+		}
+		else {
+			high = currentIndex;
+		}
+	}
+	if (arcPoints[currentIndex].ArcLength > distanceAlongSegment) {
+		currentIndex--;
+	}
+
+	if (arcPoints[currentIndex].ArcLength === distanceAlongSegment || currentIndex + 1 >= arcPoints.size()) {
+		return arcPoints[currentIndex].Point;
+	}
+	else {
+		const distanceFromTargetForPointA = distanceAlongSegment - arcPoints[currentIndex].ArcLength;
+		const pointA = arcPoints[currentIndex].Point;
+		
+		const distanceFromTargetForPointB = arcPoints[currentIndex + 1].ArcLength - distanceAlongSegment;
+		const pointB = arcPoints[currentIndex + 1].Point;
+
+		const weightForPointA = distanceFromTargetForPointA / (distanceFromTargetForPointA + distanceFromTargetForPointB);
+
+		return pointA.mul(weightForPointA).add(pointB.mul(1 - weightForPointA));
+	}
+}
 
 function _renderBezierLinearApproximationRelativePointStrings(
 	startWaypoint: EditablePathGenWaypoint,
 	endWaypoint: EditablePathGenWaypoint,
+	initialDistanceProgress: number,
+	finalDistanceProgress: number,
 	approximateCurveLength: number,
 	relativeOrigin: Vector3,
 	stringBuilder: IStringBuilder,
@@ -31,7 +96,6 @@ function _renderBezierLinearApproximationRelativePointStrings(
 	}
 
 	let timestampToPointGetter: (t: number) => Vector3;
-	let timestampToDerivativeGetter: (t: number) => Vector3;
 
 	if (!isStartWaypointLinear && !isEndWaypointLinear) {
 		const points = [
@@ -42,7 +106,6 @@ function _renderBezierLinearApproximationRelativePointStrings(
 		];
 
 		timestampToPointGetter = (t: number) =>  ComputeCubicBezierPoint(points, t);
-		timestampToDerivativeGetter = (t: number) =>  ComputeCubicBezierDerivativeWithRespectToTimestamp(points, t);
 	}
 	else if (isStartWaypointLinear) {
 		const points = [
@@ -52,7 +115,6 @@ function _renderBezierLinearApproximationRelativePointStrings(
 		];
 
 		timestampToPointGetter = (t: number) =>  ComputeQuadraticBezierPoint(points, t);
-		timestampToDerivativeGetter = (t: number) =>  ComputeQuadraticBezierPoint(points, t);
 	}
 	else {
 		const points = [
@@ -62,29 +124,20 @@ function _renderBezierLinearApproximationRelativePointStrings(
 		];
 
 		timestampToPointGetter = (t: number) =>  ComputeQuadraticBezierPoint(points, t);
-		timestampToDerivativeGetter = (t: number) =>  ComputeQuadraticBezierPoint(points, t);
 	}
 
-	stringBuilder.Add(`${linePrefix}LinearApproximationPoints = {\n`);
+	const arcPoints = _getArcPoints(startRelativePosition, segmentCount * 2, timestampToPointGetter);
+	const distanceProgressDelta = finalDistanceProgress - initialDistanceProgress;
+	for (let i = 1; i <= segmentCount; i++) {
+		const segmentProgress = i / (segmentCount + 1);
+		const distanceProgress = initialDistanceProgress + (distanceProgressDelta * segmentProgress);
+		const point = _getApproximateCurveWaypointPositionFromDistanceAndArcPoints(segmentProgress * approximateCurveLength, arcPoints);
 
-	let previousTimestampDelta = 0;
-	let timestamp = 0;
-	for (let i = 0; i < segmentCount; i++) {
-		const point = timestampToPointGetter(timestamp);
-		stringBuilder.Add(`${linePrefix}\tVector3.new(${point.X}, ${point.Y}, ${point.Z}),\n`);
-
-		const derivative = timestampToDerivativeGetter(timestamp);
-		if (derivative.Magnitude > 0) {
-			const timestampDelta = derivative.Magnitude / approximateCurveLength;
-			timestamp += timestampDelta;
-			previousTimestampDelta = derivative.Magnitude / approximateCurveLength;
-		}
-		else {
-			timestamp += previousTimestampDelta;
-		}
+        stringBuilder.Add(`${linePrefix}{\n`);
+        stringBuilder.Add(`${linePrefix}\tDistanceProgress = ${distanceProgress},\n`);
+		stringBuilder.Add(`${linePrefix}\tRelativePosition = Vector3.new(${point.X}, ${point.Y}, ${point.Z}),\n`);
+		stringBuilder.Add(`${linePrefix}},\n`);
 	}
-
-	stringBuilder.Add(`${linePrefix}},\n`);
 }
 
 export = function (options: IBakeOptions) {
@@ -137,35 +190,45 @@ export = function (options: IBakeOptions) {
     let traveledDistance = 0;
     for (let i = 0; i < PluginSharedState.PathInfo.Waypoints.size(); i++) {
         const waypoint = PluginSharedState.PathInfo.Waypoints[i];
-        const waypointRelativePosition = waypoint.VisualizationPart.Position.sub(relativeOrigin);
+		const waypointRelativePosition = waypoint.VisualizationPart.Position.sub(relativeOrigin);
+		const distanceProgress = traveledDistance / totalPathLength;
 
         stringBuilder.Add(`\t\t{\n`);
-        stringBuilder.Add(`\t\t\tDistanceProgress = ${traveledDistance / totalPathLength},\n`);
+        stringBuilder.Add(`\t\t\tDistanceProgress = ${distanceProgress},\n`);
 		stringBuilder.Add(`\t\t\tRelativePosition = Vector3.new(${waypointRelativePosition.X}, ${waypointRelativePosition.Y}, ${waypointRelativePosition.Z}),\n`);
 
-		if (waypoint.ExitingHandleVisualizationPart !== undefined) {
-			const exitingHandleRelativePosition = waypoint.ExitingHandleVisualizationPart.Position.sub(relativeOrigin);
-			stringBuilder.Add(`\t\t\tExitingHandleRelativePosition = Vector3.new(${exitingHandleRelativePosition.X}, ${exitingHandleRelativePosition.Y}, ${exitingHandleRelativePosition.Z})),\n`);
+		const isWaypointLinear = waypoint.ExitingHandleVisualizationPart === undefined && waypoint.EnteringHandleVisualizationPart === undefined;
+		if (isWaypointLinear) {
+			stringBuilder.Add(`\t\t},\n`);
 		}
-
-		if (waypoint.EnteringHandleVisualizationPart !== undefined) {
-			const enteringHandleRelativePosition = waypoint.EnteringHandleVisualizationPart.Position.sub(relativeOrigin);
-			stringBuilder.Add(`\t\t\tEnteringHandleRelativePosition = Vector3.new(${enteringHandleRelativePosition.X}, ${enteringHandleRelativePosition.Y}, ${enteringHandleRelativePosition.Z})),\n`);
-		}
-
-		if (i < PluginSharedState.PathInfo.Waypoints.size() - 1 && options.BezierApproximationLinearSegmentCount > 0) {
+		else if (options.BezierApproximation.IsEnabled) {
+			stringBuilder.Add(`\t\t},\n`);
+			
 			_renderBezierLinearApproximationRelativePointStrings(
 				waypoint,
 				PluginSharedState.PathInfo.Waypoints[i + 1],
+				distanceProgress,
+				(traveledDistance + segmentLengths[i]) / totalPathLength,
 				segmentLengths[i],
 				relativeOrigin,
 				stringBuilder,
-				options.BezierApproximationLinearSegmentCount,
-				`\t\t\t`
+				math.ceil(segmentLengths[i] / options.BezierApproximation.MinDistanceBetweenCurvePoints),
+				`\t\t`
 			);
 		}
+		else if (i < PluginSharedState.PathInfo.Waypoints.size() - 1) {
+			if (waypoint.ExitingHandleVisualizationPart !== undefined) {
+				const exitingHandleRelativePosition = waypoint.ExitingHandleVisualizationPart.Position.sub(relativeOrigin);
+				stringBuilder.Add(`\t\t\tExitingHandleRelativePosition = Vector3.new(${exitingHandleRelativePosition.X}, ${exitingHandleRelativePosition.Y}, ${exitingHandleRelativePosition.Z}),\n`);
+			}
 
-        stringBuilder.Add(`\t\t},\n`);
+			if (waypoint.EnteringHandleVisualizationPart !== undefined) {
+				const enteringHandleRelativePosition = waypoint.EnteringHandleVisualizationPart.Position.sub(relativeOrigin);
+				stringBuilder.Add(`\t\t\tEnteringHandleRelativePosition = Vector3.new(${enteringHandleRelativePosition.X}, ${enteringHandleRelativePosition.Y}, ${enteringHandleRelativePosition.Z}),\n`);
+			}
+
+			stringBuilder.Add(`\t\t},\n`);
+		}
 
         traveledDistance += segmentLengths[i];
     }

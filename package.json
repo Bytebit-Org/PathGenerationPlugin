@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rbxts/PathGenUtils": "git+https://github.com/Bytebit-Org/PathGenUtils.git",
     "@rbxts/cue": "^1.0.0",
-    "@rbxts/roact": "^1.0.7",
+    "@rbxts/roact": "^1.1.5",
+    "@rbxts/roblox-BezierFunctions": "git+https://github.com/Bytebit-Org/roblox-BezierFunctions.git",
     "@rbxts/services": "^1.0.23",
     "@rbxts/types": "^1.0.235"
   }
