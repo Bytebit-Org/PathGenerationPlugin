@@ -7,13 +7,16 @@ import { HttpService } from "@rbxts/services";
  */
 export = class StudioDialogFrame {
 	private _DockWidgetPluginGui: DockWidgetPluginGui;
-    private _Handle: Roact.ComponentInstanceHandle;
+	private _Handle: Roact.ComponentInstanceHandle;
 
 	public readonly Opened = new Signal<[]>();
 	public readonly Closed = new Signal<[]>();
 
-	constructor(title: string, size: Vector2, contents: Roact.Element) {
-		const dockWidgetGuiId = HttpService.GenerateGUID();
+	constructor(pluginReference: Plugin, title: string, size: Vector2, dockWidgetPluginGuiId?: string) {
+		if (dockWidgetPluginGuiId === undefined) {
+			dockWidgetPluginGuiId = HttpService.GenerateGUID();
+		}
+
 		const dockWidgetPluginGuiInfo = new DockWidgetPluginGuiInfo(
 			Enum.InitialDockState.Float,
 			false,
@@ -22,7 +25,7 @@ export = class StudioDialogFrame {
 			size.Y,
 			size.X,
 			size.Y);
-		const dockWidgetPluginGui = plugin.CreateDockWidgetPluginGui(dockWidgetGuiId, dockWidgetPluginGuiInfo);
+		const dockWidgetPluginGui = pluginReference.CreateDockWidgetPluginGui(dockWidgetPluginGuiId, dockWidgetPluginGuiInfo);
 		dockWidgetPluginGui.GetPropertyChangedSignal("Enabled").Connect(() => {
 			if (dockWidgetPluginGui.Enabled) {
 				this.Opened.Fire();
@@ -33,15 +36,7 @@ export = class StudioDialogFrame {
 		});
 		dockWidgetPluginGui.Title = title;
 
-		this._Handle = Roact.mount(contents, dockWidgetPluginGui);
 		this._DockWidgetPluginGui = dockWidgetPluginGui;
-	}
-
-	/**
-	 * Opens the dialog frame.
-	 */
-	public Open() {
-		this._DockWidgetPluginGui.Enabled = true;
 	}
 
 	/**
@@ -60,5 +55,20 @@ export = class StudioDialogFrame {
 
 		Roact.unmount(this._Handle);
 		this._DockWidgetPluginGui.Destroy();
+	}
+
+	/**
+	 * Opens the dialog frame.
+	 */
+	public Open() {
+		this._DockWidgetPluginGui.Enabled = true;
+	}
+
+	public SetContents(contents: Roact.Element) {
+		if (this._Handle !== undefined) {
+			Roact.unmount(this._Handle);
+		}
+
+		this._Handle = Roact.mount(contents, this._DockWidgetPluginGui);
 	}
 }

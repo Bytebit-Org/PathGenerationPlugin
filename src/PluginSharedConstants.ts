@@ -1,4 +1,5 @@
 import { HttpService } from "@rbxts/services";
+import BakeOptionsDialogFrame = require("UI/DialogFrames/BakeOptionsDialogFrame");
 
 const baseFolder = new Instance("Folder");
 baseFolder.Archivable = false;

@@ -1,5 +1,5 @@
 interface IStudioComponentProperties {
-    Active?: boolean,
+	Active?: boolean,
     LayoutOrder?: number,
     Rotation?: number,
     Visible?: boolean

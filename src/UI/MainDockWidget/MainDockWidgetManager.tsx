@@ -4,12 +4,10 @@ import PluginSharedConstants = require("PluginSharedConstants");
 import { Workspace } from "@rbxts/services";
 
 export = class MainDockWidgetManager {
-    private readonly _Plugin: Plugin;
     private readonly _DockWidgetGui: DockWidgetPluginGui;
     private _Handle: Roact.ComponentInstanceHandle;
 
-    constructor(plugin: Plugin, dockWidgetGui: DockWidgetPluginGui) {
-        this._Plugin = plugin;
+    constructor(dockWidgetGui: DockWidgetPluginGui) {
         this._DockWidgetGui = dockWidgetGui;
 
         this._DockWidgetGui.Name = "PathGenDockGui";

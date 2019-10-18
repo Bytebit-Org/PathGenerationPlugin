@@ -1,6 +1,7 @@
 /// <reference types="@rbxts/types/plugin" />
 
 import MainDockWidgetManager = require("UI/MainDockWidget/MainDockWidgetManager");
+import PluginSharedConstants = require("PluginSharedConstants");
 import PluginSharedState = require("PluginSharedState");
 import PluginActions = require("PluginActions");
 import PreviewManager = require("UI/PreviewManager");
@@ -24,7 +25,7 @@ const mainDockWidgetGuiInfo = new DockWidgetPluginGuiInfo(
 );
 const mainDockWidgetGuiId = "DockWidget_Main";
 const mainDockWidgetGui = plugin.CreateDockWidgetPluginGui(mainDockWidgetGuiId, mainDockWidgetGuiInfo);
-const mainDockWidgetManager = new MainDockWidgetManager(plugin, mainDockWidgetGui);
+const mainDockWidgetManager = new MainDockWidgetManager(mainDockWidgetGui);
 const previewManager = new PreviewManager();
 
 openButton.Click.Connect(() => {

@@ -1,7 +1,7 @@
 import Roact from "@rbxts/roact";
 import StudioTextButton = require("UI/RoactStudioComponents/StudioTextButton");
 import SaveCurrentPathToModuleScript = require("HelperFunctions/SaveCurrentPathToModuleScript");
-import BakeCurrentPathToModuleScriptRelativeToSelectedModel = require("HelperFunctions/BakeCurrentPathToModuleScriptRelativeToSelectedModel");
+import DialogFrames = require("UI/DialogFrames");
 
 interface IHeaderProperties {
     CloseButtonPressedCallback: () => void,
@@ -48,12 +48,9 @@ export = class Header extends Roact.Component<IHeaderProperties> {
                 Width={new UDim(0, 40)}
                 
                 Events={{
-                    MouseButton1Click: () => BakeCurrentPathToModuleScriptRelativeToSelectedModel({
-						BezierApproximation: {
-							IsEnabled: true,
-							MinDistanceBetweenCurvePoints: 1.5,
-						}
-					})
+					MouseButton1Click: () => {
+						DialogFrames.GetByType(DialogFrames.Type.BakeOptions).Prompt();
+					}
                 }} />
             <StudioTextButton
                 Key={"SaveButton"}
