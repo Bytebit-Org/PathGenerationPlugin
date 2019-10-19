@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import StudioTextButton = require("UI/RoactStudioComponents/StudioTextButton");
+import { StudioTextButton } from "@rbxts/roblox-RoactStudioComponents";
 import SaveCurrentPathToModuleScript = require("HelperFunctions/SaveCurrentPathToModuleScript");
 import DialogFrames = require("UI/DialogFrames");
 

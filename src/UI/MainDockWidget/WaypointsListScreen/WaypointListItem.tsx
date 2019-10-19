@@ -1,11 +1,9 @@
 import Roact from "@rbxts/roact";
 import EditablePathGenWaypoint = require("PathGen/EditablePathGenWaypoint");
-import StudioTextButton = require("UI/RoactStudioComponents/StudioTextButton");
-import StudioTextBox = require("UI/RoactStudioComponents/StudioTextBox");
+import { StudioImageButton, StudioTextBox, StudioTextButton } from "@rbxts/roblox-RoactStudioComponents";
 import PluginSharedState = require("PluginSharedState");
 import PluginSharedConstants = require("PluginSharedConstants");
 import { Workspace } from "@rbxts/services";
-import StudioImageButton = require("UI/RoactStudioComponents/StudioImageButton");
 import CreateBezierControls = require("HelperFunctions/CreateBezierControls");
 
 interface IWaypointListItemProperties {

@@ -1,7 +1,7 @@
 /// <reference types="@rbxts/types/plugin" />
 
 import Roact from "@rbxts/roact";
-import StudioTextButton = require("UI/RoactStudioComponents/StudioTextButton");
+import { StudioTextButton } from "@rbxts/roblox-RoactStudioComponents";
 import EditablePathGenWaypoint = require("PathGen/EditablePathGenWaypoint");
 import PluginSharedState = require("PluginSharedState");
 import PlaceNewWaypointAsync = require("HelperFunctions/PlaceNewWaypointAsync");

@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import StudioDialogFrame from "UI/RoactStudioComponents/StudioDialogFrame";
+import { StudioDialogFrame } from "@rbxts/roblox-RoactStudioComponents";
 import PluginSharedState from "PluginSharedState";
 import BakeOptionsDialogMasterFrame from "./BakeOptionsDialogMasterFrame";
 import IDialogFrame from "../IDialogFrame";
@@ -10,8 +10,9 @@ export = class BakeOptionsDialogFrame implements IDialogFrame {
 	constructor() {
 		this._StudioDialogFrame = new StudioDialogFrame(
 			PluginSharedState.Plugin,
+			"PathGenBakeOptionsDialogFrame",
 			"Bake Options",
-			new Vector2(500, 125),
+			new Vector2(500, 185),
 			"PathGen_BakeOptionsDialog");
 	}
 

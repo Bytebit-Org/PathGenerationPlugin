@@ -13,6 +13,7 @@ interface IBakeOptions {
 		IsEnabled: boolean;
 		MinDistanceBetweenCurvePoints: number;
 	};
+	ScriptName: string;
 };
 
 interface IArcPoint {
@@ -239,7 +240,7 @@ export = function (options: IBakeOptions) {
     const serializedPathData = stringBuilder.Render();
 
     const moduleScript = new Instance("ModuleScript");
-    moduleScript.Name = PluginSharedState.PathInfo.Name !== undefined && PluginSharedState.PathInfo.Name !== "" ? PluginSharedState.PathInfo.Name : "PathGenBake";
+    moduleScript.Name = options.ScriptName;
     moduleScript.Source = serializedPathData;
     moduleScript.Parent = model;
 }
