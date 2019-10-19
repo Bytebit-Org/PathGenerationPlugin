@@ -12,7 +12,7 @@ export = class BakeOptionsDialogFrame implements IDialogFrame {
 			PluginSharedState.Plugin,
 			"PathGenBakeOptionsDialogFrame",
 			"Bake Options",
-			new Vector2(500, 185),
+			new Vector2(500, 210),
 			"PathGen_BakeOptionsDialog");
 	}
 

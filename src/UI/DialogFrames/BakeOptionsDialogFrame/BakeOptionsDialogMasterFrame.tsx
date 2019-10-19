@@ -15,6 +15,7 @@ interface IState {
 		IsEnabled: boolean;
 		MinDistanceBetweenCurvePoints?: number;
 	};
+	MaxVectorComponentDecimalPlaceCount: number;
 	ErrorMessages?: Array<string>;
 }
 
@@ -30,6 +31,7 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 				IsEnabled: false,
 				MinDistanceBetweenCurvePoints: 2
 			},
+			MaxVectorComponentDecimalPlaceCount: 2,
 			ErrorMessages: this.getErrorMessages(),
 		} as IState);
 
@@ -42,7 +44,9 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 
 	public render() : Roact.Element {
 		const theme = settings().Studio.Theme;
-		const layoutOrderGenertor = new LayoutOrderGenerator();
+
+		const baseLayoutOrderGenertor = new LayoutOrderGenerator();
+		const basicDetailsOptionsFrameLayoutGenerator = new LayoutOrderGenerator();
 		
 		return <StudioFrame
 			Key={"MasterFrame"}>
@@ -59,7 +63,7 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 				BackgroundTransparency={1}
 				BorderSizePixel={0}
 				Font={Enum.Font.SourceSansBold}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Position={new UDim2(0.5, 0, 0, 0)}
 				TextColor3={theme.GetColor(Enum.StudioStyleGuideColor.TitlebarText)}
 				TextXAlignment={Enum.TextXAlignment.Left}
@@ -71,13 +75,13 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 				Key={"MarginFrame1"}
 				BackgroundTransparency={1}
 				BorderSizePixel={0}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Size={new UDim2(1, 0, 0, 8)} />
 			<frame
 				Key={"BasicDetailsOptionsFrame"}
 				BackgroundTransparency={1}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
-				Size={new UDim2(0.9, 0, 0, 25)}>
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
+				Size={new UDim2(0.9, 0, 0, 50)}>
 				<uilistlayout
 					Key={"UIListLayout"}
 					Padding={new UDim(0, 1)}
@@ -88,8 +92,8 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 				<frame
 					Key={"NameFrame"}
 					BackgroundTransparency={1}
-					LayoutOrder={1}
-					Size={new UDim2(1, 0, 1, 0)}>
+					LayoutOrder={basicDetailsOptionsFrameLayoutGenerator.GetNextLayoutOrder()}
+					Size={new UDim2(1, 0, 0.5, 0)}>
 					<uilistlayout
 						Key={"UIListLayout"}
 						Padding={new UDim(0, 1)}
@@ -98,6 +102,7 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 						SortOrder={Enum.SortOrder.LayoutOrder}
 						VerticalAlignment={Enum.VerticalAlignment.Center} />
 					<StudioTextLabel
+						Key={"NameLabel"}
 						LayoutOrder={1}
 						Text={"Bake script name"}
 						TextXAlignment={Enum.TextXAlignment.Left}
@@ -123,17 +128,56 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 							}
 						}} />
 				</frame>
+				<frame
+					Key={"VectorComponentDecimalPlaceCountFrame"}
+					BackgroundTransparency={1}
+					LayoutOrder={basicDetailsOptionsFrameLayoutGenerator.GetNextLayoutOrder()}
+					Size={new UDim2(1, 0, 0.5, 0)}>
+					<uilistlayout
+						Key={"UIListLayout"}
+						Padding={new UDim(0, 1)}
+						FillDirection={Enum.FillDirection.Horizontal}
+						HorizontalAlignment={Enum.HorizontalAlignment.Left}
+						SortOrder={Enum.SortOrder.LayoutOrder}
+						VerticalAlignment={Enum.VerticalAlignment.Center} />
+					<StudioTextLabel
+						Key={"VectorComponentDecimalPlaceCountLabel"}
+						LayoutOrder={1}
+						Text={"Vector component decimal count"}
+						TextXAlignment={Enum.TextXAlignment.Left}
+						Width={new UDim(0.7, 0)} />
+					<StudioTextBox
+						Key={"VectorComponentDecimalCountTextBox"}
+						Active={true}
+						ClearTextOnFocus={false}
+						InputValidationCallback={(newValue: string) => {
+							return tonumber(newValue, 10) !== undefined;
+						}}
+						LayoutOrder={2}
+						Text={tostring(this.state.MaxVectorComponentDecimalPlaceCount)}
+						TextXAlignment={Enum.TextXAlignment.Left}
+						Width={new UDim(0.3, 0)}
+
+						// Events
+						Events={{
+							ValueChanged: (actualInstance: TextBox, newValue: string) => {
+								this.setState({
+									MaxVectorComponentDecimalPlaceCount: tonumber(newValue)
+								} as IState);
+							}
+						}} />
+				</frame>
 			</frame>
 			<frame
 				Key={"MarginFrame2"}
 				BackgroundTransparency={1}
 				BorderSizePixel={0}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Size={new UDim2(1, 0, 0, 8)} />
 			<frame
 				Key={"BezierApproximationOptionsFrame"}
 				BackgroundTransparency={1}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Size={new UDim2(0.9, 0, 0, 50)}>
 				<uilistlayout
 					Key={"UIListLayout"}
@@ -178,7 +222,7 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 				<frame
 					Key={"DistanceBetweenCurvePointsFrame"}
 					BackgroundTransparency={1}
-					LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+					LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 					Size={new UDim2(1, 0, 0.5, 0)}>
 					<uilistlayout
 						Key={"UIListLayout"}
@@ -227,18 +271,18 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 				Key={"MarginFrame3"}
 				BackgroundTransparency={1}
 				BorderSizePixel={0}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Size={new UDim2(1, 0, 0, 8)} />
 			<StudioTextLabel
 				Key={"ErrorMessageLabel"}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Text={this.state.ErrorMessages.size() > 0 ? this.state.ErrorMessages[0] : ""}
 				TextColorEnum={Enum.StudioStyleGuideColor.ErrorText} />
 			<StudioTextButton
 				Key={"ConfirmButton"}
 				Active={this.state.ErrorMessages.size() === 0}
 				AnchorPoint={new Vector2(0.5, 0)}
-				LayoutOrder={layoutOrderGenertor.GetNextLayoutOrder()}
+				LayoutOrder={baseLayoutOrderGenertor.GetNextLayoutOrder()}
 				Text={"Bake"}
 				Width={new UDim(0.9, 0)}
 				
@@ -249,6 +293,7 @@ export = class BakeOptionsDialogMasterFrame extends Roact.Component<IProps, ISta
 								IsEnabled: this.state.BezierApproximation.IsEnabled,
 								MinDistanceBetweenCurvePoints: this.state.BezierApproximation.MinDistanceBetweenCurvePoints,
 							},
+							MaxVectorComponentDecimalPlaceCount: this.state.MaxVectorComponentDecimalPlaceCount,
 							ScriptName: this.state.BakeScriptName
 						});
 

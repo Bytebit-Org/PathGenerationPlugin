@@ -13,6 +13,7 @@ interface IBakeOptions {
 		IsEnabled: boolean;
 		MinDistanceBetweenCurvePoints: number;
 	};
+	MaxVectorComponentDecimalPlaceCount: number;
 	ScriptName: string;
 };
 
@@ -76,6 +77,10 @@ function _getApproximateCurveWaypointPositionFromDistanceAndArcPoints(distanceAl
 	}
 }
 
+function _numberToString(value: number, maxVectorComponentDecimalPlaceCount: number) {
+	return `%.${maxVectorComponentDecimalPlaceCount}f`.format(value);
+}
+
 function _renderBezierLinearApproximationRelativePointStrings(
 	startWaypoint: EditablePathGenWaypoint,
 	endWaypoint: EditablePathGenWaypoint,
@@ -85,7 +90,7 @@ function _renderBezierLinearApproximationRelativePointStrings(
 	relativeOrigin: Vector3,
 	stringBuilder: IStringBuilder,
 	segmentCount: number,
-	linePrefix: string) {
+	maxVectorComponentDecimalPlaceCount: number) {
 	const startRelativePosition = startWaypoint.VisualizationPart.Position.sub(relativeOrigin);
 	const isStartWaypointLinear = startWaypoint.ExitingHandleVisualizationPart === undefined;
 
@@ -134,10 +139,10 @@ function _renderBezierLinearApproximationRelativePointStrings(
 		const distanceProgress = initialDistanceProgress + (distanceProgressDelta * segmentProgress);
 		const point = _getApproximateCurveWaypointPositionFromDistanceAndArcPoints(segmentProgress * approximateCurveLength, arcPoints);
 
-        stringBuilder.Add(`${linePrefix}{\n`);
-        stringBuilder.Add(`${linePrefix}\tDistanceProgress = ${distanceProgress},\n`);
-		stringBuilder.Add(`${linePrefix}\tRelativePosition = Vector3.new(${point.X}, ${point.Y}, ${point.Z}),\n`);
-		stringBuilder.Add(`${linePrefix}},\n`);
+        stringBuilder.Add(`{`);
+        stringBuilder.Add(`DistanceProgress=${distanceProgress},`);
+		stringBuilder.Add(`RelativePosition=Vector3.new(${_numberToString(point.X, maxVectorComponentDecimalPlaceCount)},${_numberToString(point.Y, maxVectorComponentDecimalPlaceCount)},${_numberToString(point.Z, maxVectorComponentDecimalPlaceCount)}),`);
+		stringBuilder.Add(`},`);
 	}
 }
 
@@ -184,9 +189,9 @@ export = function (options: IBakeOptions) {
     const relativeOrigin = model.PrimaryPart.Position;
 
     const stringBuilder = new StringBuilder();
-    stringBuilder.Add(`return {\n`);
-	stringBuilder.Add(`\tTotalDistance = ${totalPathLength},\n`);
-	stringBuilder.Add(`\tWaypoints = {\n`);
+    stringBuilder.Add(`return {`);
+	stringBuilder.Add(`TotalDistance=${totalPathLength},`);
+	stringBuilder.Add(`Waypoints={`);
 
     let traveledDistance = 0;
     for (let i = 0; i < PluginSharedState.PathInfo.Waypoints.size(); i++) {
@@ -194,16 +199,16 @@ export = function (options: IBakeOptions) {
 		const waypointRelativePosition = waypoint.VisualizationPart.Position.sub(relativeOrigin);
 		const distanceProgress = traveledDistance / totalPathLength;
 
-        stringBuilder.Add(`\t\t{\n`);
-        stringBuilder.Add(`\t\t\tDistanceProgress = ${distanceProgress},\n`);
-		stringBuilder.Add(`\t\t\tRelativePosition = Vector3.new(${waypointRelativePosition.X}, ${waypointRelativePosition.Y}, ${waypointRelativePosition.Z}),\n`);
+        stringBuilder.Add(`{`);
+        stringBuilder.Add(`DistanceProgress=${distanceProgress},`);
+		stringBuilder.Add(`RelativePosition=Vector3.new(${_numberToString(waypointRelativePosition.X, options.MaxVectorComponentDecimalPlaceCount)},${_numberToString(waypointRelativePosition.Y, options.MaxVectorComponentDecimalPlaceCount)},${_numberToString(waypointRelativePosition.Z, options.MaxVectorComponentDecimalPlaceCount)}),`);
 
 		const isWaypointLinear = waypoint.ExitingHandleVisualizationPart === undefined && waypoint.EnteringHandleVisualizationPart === undefined;
 		if (isWaypointLinear) {
-			stringBuilder.Add(`\t\t},\n`);
+			stringBuilder.Add(`},`);
 		}
 		else if (options.BezierApproximation.IsEnabled) {
-			stringBuilder.Add(`\t\t},\n`);
+			stringBuilder.Add(`},`);
 			
 			_renderBezierLinearApproximationRelativePointStrings(
 				waypoint,
@@ -214,27 +219,27 @@ export = function (options: IBakeOptions) {
 				relativeOrigin,
 				stringBuilder,
 				math.ceil(segmentLengths[i] / options.BezierApproximation.MinDistanceBetweenCurvePoints),
-				`\t\t`
+				options.MaxVectorComponentDecimalPlaceCount
 			);
 		}
 		else if (i < PluginSharedState.PathInfo.Waypoints.size() - 1) {
 			if (waypoint.ExitingHandleVisualizationPart !== undefined) {
 				const exitingHandleRelativePosition = waypoint.ExitingHandleVisualizationPart.Position.sub(relativeOrigin);
-				stringBuilder.Add(`\t\t\tExitingHandleRelativePosition = Vector3.new(${exitingHandleRelativePosition.X}, ${exitingHandleRelativePosition.Y}, ${exitingHandleRelativePosition.Z}),\n`);
+				stringBuilder.Add(`ExitingHandleRelativePosition=Vector3.new(${exitingHandleRelativePosition.X}, ${exitingHandleRelativePosition.Y}, ${exitingHandleRelativePosition.Z}),`);
 			}
 
 			if (waypoint.EnteringHandleVisualizationPart !== undefined) {
 				const enteringHandleRelativePosition = waypoint.EnteringHandleVisualizationPart.Position.sub(relativeOrigin);
-				stringBuilder.Add(`\t\t\tEnteringHandleRelativePosition = Vector3.new(${enteringHandleRelativePosition.X}, ${enteringHandleRelativePosition.Y}, ${enteringHandleRelativePosition.Z}),\n`);
+				stringBuilder.Add(`EnteringHandleRelativePosition=Vector3.new(${enteringHandleRelativePosition.X}, ${enteringHandleRelativePosition.Y}, ${enteringHandleRelativePosition.Z}),`);
 			}
 
-			stringBuilder.Add(`\t\t},\n`);
+			stringBuilder.Add(`},`);
 		}
 
         traveledDistance += segmentLengths[i];
     }
 
-    stringBuilder.Add(`\t},\n`);
+    stringBuilder.Add(`},`);
     stringBuilder.Add(`}`);
 
     const serializedPathData = stringBuilder.Render();
